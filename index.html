@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="module">
+      import { createApp } from 'https://unpkg.com/petite-vue?module';
+      const pokeapi = async (url) => await fetch(url).then(data => data.json());
+      
+      const STORAGE_KEY = 'adventure-main'
+      const mainStorage = {
+        fetch: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'),
+        save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+      }
+          
+      createApp({
+        title: 'Aventure v0.1',
+        onMount() {
+
+        },
+        autoSavedData: [],
+        save() {
+          mainStorage.save(this.autoSavedData);
+        },
+      }).mount();
+    </script>
+  </head>
+  <body>
+    <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
+      <h1>{{title}}</h1>
+    </div>
+  </body>
+</html>
