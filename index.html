@@ -33,7 +33,7 @@
         },
         nextDay() {
           const routes = ["castle", "river"];
-          this.data.story.push(routes[Math.round(Math.random() * routes.length)]);
+          this.data.story.push(routes[Math.round(Math.random() * routes.length)-1]);
           this.dayStep = 0;
         },
         newAdventure() {
