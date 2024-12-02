@@ -84,7 +84,7 @@
       <h1>{{title}}</h1>
       <button @click="newAdventure()">Nouvelle aventure</button>
       <div v-if="day === 0" v-scope="Intro()"></div>
-      <div v-else v-scope="Day({template: day})"></div>
+      <div v-else v-scope="Day({template: data.story[day]})"></div>
     </div>
   </body>
 </html>
