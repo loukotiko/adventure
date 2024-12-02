@@ -5,7 +5,7 @@
       import { createApp } from 'https://unpkg.com/petite-vue?module';
       const registerEvents = (events, r) => ({
         ...events.reduce((eventsMethods, event) => ({
-          ...eventsMethods, [event]() { this.$emit(event) }
+          ...eventsMethods, [event](...p) { this.$emit(event,...p) }
         }), {}),
         ...r
       });
@@ -21,9 +21,9 @@
           $template: '#intro-template'
         });
       };      
-      function Day() {
+      function Day({template}) {
         return registerEvents(['nextDay'], {
-          $template: '#day-template'
+          $template: '#'+template+'-template'
         });
       };
 
@@ -33,7 +33,9 @@
           // Prepare things on mount
         },
         nextDay() {
-          this.data.story.push("test");
+          const routes = ["castle", "river"];
+          this.data.story.push(routes[Math.round(Math.random() * routes.length)]);
+          this.dayStep = 0;
         },
         newAdventure() {
           this.data.story === "";
@@ -41,8 +43,12 @@
         get day() {
           return this.data.story.length;
         },
+        dayStep: 0,
         data: {
-          hero: {},
+          hero: {
+            strength: 1,
+            vitality: 1,
+          },
           story: []
         },
         save() {
@@ -54,23 +60,35 @@
     </script>
   </head>
   <body>
-    <template id="intro-template">
+    <template id="intro">
       <h2>Début de l'aventure</h2>
       <p>L'aventure commence !</p>
-      <button @click="start">Démarrer l'aventure !</button>
+      <button @click="start()">Démarrer l'aventure !</button>
     </template>
     
-    <template id="day-template">
+    <template id="castle-template">
       <h2>Jour {{day}}</h2>
-      <h1>Data : {{data}}</h1>
-      <button @click="nextDay">Jour suivant</button>
+      <h1>Chateau ! {{data}}</h1>
+      <button @click="nextDay()">Jour suivant</button>
+    </template>
+    
+    <template id="river-template">
+      <h2>Jour {{day}}</h2>
+      <h1>Rivière ! {{data}}</h1>
+      <div v-if="dayStep === 0">
+        <button @click="addVitality(1) + dayStep++">Se reposer</button>
+        <button @click="addStrength(1) + dayStep++">Pêcher du poisson</button>
+      </div>
+      <div v-if="dayStep === 1">
+        <button @click="nextDay()">Jour suivant</button>
+      </div>
     </template>
     
     <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
-      <button @click="newAdventure">Nouvelle aventure</button>
+      <button @click="newAdventure()">Nouvelle aventure</button>
       <div v-if="day === 0" v-scope="Intro()" @start="nextDay()"></div>
-      <div v-else v-scope="Day({day:day, data:data.story[day]})" @nextDay="nextDay()"></div>
+      <div v-else v-scope="Day({template: day})" @nextDay="nextDay()"></div>
     </div>
   </body>
 </html>
