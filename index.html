@@ -4,23 +4,24 @@
     <script type="module">
       import { createApp } from 'https://unpkg.com/petite-vue?module';
       
-      const STORAGE_KEY = 'adventure-main'
+      const STORAGE_KEY = 'adventure-main';
       const mainStorage = {
         fetch: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'),
         save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-      }
+      };
 
       function Intro() {
         return { $template: '#intro-template' };
-      };      
+      }
       function Day({ template }) {
         return { $template: '#'+template+'-template' };
-      };
+      }
       function StepDay(props) {
         return {
           ...Day(props),
           dayStep: 0
-      };
+        };
+      }
 
       const DEFAULT_HERO = {
         strength: 1,
@@ -30,14 +31,14 @@
       const ROUTES = ["castle", "river"];
       const ROUTES_COMPONENTS = {
         river: StepDay
-      }
+      };
 
       createApp({
         title: 'Aventure v0.1',
         async onMount() {
           // Keep local save
           this.data = await mainStorage.fetch();
-          if(!data) this.newAdventure();
+          if(!this.data) this.newAdventure();
           
           this.dayComponent = this.updateComponent();
           
