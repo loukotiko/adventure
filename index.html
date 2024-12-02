@@ -11,8 +11,12 @@
         save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
       }
 
-      const Intro = () => ({$template: '#Intro'});      
-      const Day = () => ({$template: '#Day'});
+      function Intro() {
+        return {$template: '#intro-template', start(){ this.$emit('start') }}
+      };      
+      function Day() {
+        return {$template: '#day-template', nextDay(){ this.$emit('nextDay') }})
+      };
 
       createApp({
         title: 'Aventure v0.1',
@@ -44,17 +48,17 @@
     <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
       <button @click="newAdventure">Nouvelle aventure</button>
-      <template v-if="day === 0" v-scope="Intro()"/>
-      <template v-else v-scope="Day({day:day, data:data.story[day]})"/>
+      <template v-if="day === 0" v-scope="Intro()" @start="nextDay()"/>
+      <template v-else v-scope="Day({day:day, data:data.story[day]})" @nextDay="nextDay()"/>
     </div>
     
-    <template id="Intro">
+    <template id="intro-template">
       <h2>Début de l'aventure</h2>
       <p>L'aventure commence !</p>
-      <button @click="nextDay">Démarrer l'aventure !</button>
+      <button @click="start">Démarrer l'aventure !</button>
     </template>
     
-    <template id="Day">
+    <template id="day-template">
       <h2>Jour {{day}}</h2>
       <h1>Data : {{data}}</h1>
       <button @click="nextDay">Jour suivant</button>
