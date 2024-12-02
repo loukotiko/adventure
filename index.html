@@ -69,8 +69,8 @@
     <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
       <button @click="newAdventure">Nouvelle aventure</button>
-      <div v-if="day === 0" v-scope="Intro()" @start="nextDay()"/>
-      <div v-else v-scope="Day({day:day, data:data.story[day]})" @nextDay="nextDay()"/>
+      <div v-if="day === 0" v-scope="Intro()" @start="nextDay()"></div>
+      <div v-else v-scope="Day({day:day, data:data.story[day]})" @nextDay="nextDay()"></div>
     </div>
   </body>
 </html>
