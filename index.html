@@ -54,13 +54,6 @@
     </script>
   </head>
   <body>
-    <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
-      <h1>{{title}}</h1>
-      <button @click="newAdventure">Nouvelle aventure</button>
-      <template v-if="day === 0" v-scope="Intro()" @start="nextDay()"/>
-      <template v-else v-scope="Day({day:day, data:data.story[day]})" @nextDay="nextDay()"/>
-    </div>
-    
     <template id="intro-template">
       <h2>Début de l'aventure</h2>
       <p>L'aventure commence !</p>
@@ -72,5 +65,12 @@
       <h1>Data : {{data}}</h1>
       <button @click="nextDay">Jour suivant</button>
     </template>
+    
+    <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
+      <h1>{{title}}</h1>
+      <button @click="newAdventure">Nouvelle aventure</button>
+      <template v-if="day === 0" v-scope="Intro()" @start="nextDay()"/>
+      <template v-else v-scope="Day({day:day, data:data.story[day]})" @nextDay="nextDay()"/>
+    </div>
   </body>
 </html>
