@@ -1,25 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <script type="module">
-      import { createApp } from 'https://unpkg.com/petite-vue?module';
-      
-      const STORAGE_KEY = 'adventure-main';
+      import { createApp } from "https://unpkg.com/petite-vue?module";
+
+      const STORAGE_KEY = "adventure-main";
       const mainStorage = {
-        fetch: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'),
-        save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+        fetch: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"),
+        save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data)),
       };
 
-      function Intro() {
-        return { $template: '#intro-template' };
+      function Day({ template, ...props }) {
+        return { ...props, $template: `#${template || "intro"}-template` };
       }
-      function Day({ template }) {
-        return { $template: '#'+template+'-template' };
-      }
+
       function StepDay(props) {
         return {
           ...Day(props),
-          dayStep: 0
+          dayStep: 0,
         };
       }
 
@@ -30,34 +28,40 @@
 
       const ROUTES = ["castle", "river"];
       const ROUTES_COMPONENTS = {
-        river: StepDay
+        river: StepDay,
       };
 
       createApp({
-        title: 'Aventure v0.1',
+        title: "Aventure v0.1",
         async onMount() {
           // Keep local save
           this.data = await mainStorage.fetch();
-          if(!this.data) this.newAdventure();
-          
+          if (!this.data) this.newAdventure();
+
           this.updateComponent();
-          
+
           // Prepare things on mount
         },
         dayComponent: null,
         updateComponent() {
           this.dayComponent?.unmount();
           const wrapper = this.$refs.dayWrapper;
-          if(!wrapper) return;
+          if (!wrapper) return;
           wrapper.setAttribute("v-scope", "DynamicDay()");
           wrapper.innerHTML = "";
           const template = this.data.story[this.day - 1];
           this.dayComponent = createApp({
-            DynamicDay: () => (ROUTES_COMPONENTS[template] || Day)({ template })
+            DynamicDay: () =>
+              (ROUTES_COMPONENTS[template] || Day)({
+                template,
+                ...this,
+              }),
           }).mount(wrapper);
         },
         nextDay() {
-          this.data.story.push(ROUTES[Math.round(Math.random() * (ROUTES.length - 1))]);
+          this.data.story.push(
+            ROUTES[Math.round(Math.random() * (ROUTES.length - 1))]
+          );
           this.updateComponent();
         },
         newAdventure() {
@@ -75,13 +79,12 @@
         },
         data: {
           hero: structuredClone(DEFAULT_HERO),
-          story: []
+          story: [],
         },
         save() {
           mainStorage.save(this.data);
         },
-        Intro
-      }).mount();
+      }).mount("#game");
     </script>
   </head>
   <body>
@@ -90,13 +93,13 @@
       <p>L'aventure commence !</p>
       <button @click="nextDay()">Démarrer l'aventure !</button>
     </template>
-    
+
     <template id="castle-template">
       <h2>Jour {{day}}</h2>
       <h1>Chateau ! {{data}}</h1>
       <button @click="nextDay()">Jour suivant</button>
     </template>
-    
+
     <template id="river-template">
       <h2>Jour {{day}}</h2>
       <h1>Rivière ! {{data}}</h1>
@@ -108,12 +111,11 @@
         <button @click="nextDay()">Jour suivant</button>
       </div>
     </template>
-    
-    <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
+
+    <div id="game" @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
       <button @click="newAdventure()">Nouvelle aventure</button>
-      <div v-show="day === 0" v-scope="Intro()"></div>
-      <div v-show="day !== 0" :ref="dayWrapper"></div>
+      <div ref="dayWrapper"></div>
     </div>
   </body>
 </html>
