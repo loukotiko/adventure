@@ -51,11 +51,11 @@
           wrapper.innerHTML = "";
           const template = this.data.story[this.day - 1];
           this.dayComponent = createApp({
-            DynamicDay: () => (ROUTES_COMPONENTS[template] || Day)({ template });
+            DynamicDay: () => (ROUTES_COMPONENTS[template] || Day)({ template })
           }).mount(wrapper);
         },
         nextDay() {
-          this.data.story.push(ROUTES[Math.round(Math.random() * ROUTES.length)-1]);
+          this.data.story.push(ROUTES[Math.round(Math.random() * (ROUTES.length - 1))]);
           this.updateComponent();
         },
         newAdventure() {
