@@ -81,7 +81,7 @@
           mainStorage.save(this.data);
         },
         Intro
-      }).mount("#game");
+      }).mount();
     </script>
   </head>
   <body>
@@ -109,11 +109,11 @@
       </div>
     </template>
     
-    <div id="game" @vue:mounted="onMount" v-effect="save()" v-cloak>
+    <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
       <button @click="newAdventure()">Nouvelle aventure</button>
-      <div v-if="day === 0" v-scope="Intro()"></div>
-      <div v-else ref="dayWrapper"></div>
+      <div v-show="day === 0" v-scope="Intro()"></div>
+      <div v-show="day !== 0" ref="dayWrapper"></div>
     </div>
   </body>
 </html>
