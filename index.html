@@ -3,7 +3,12 @@
   <head>
     <script type="module">
       import { createApp } from 'https://unpkg.com/petite-vue?module';
-      const pokeapi = async (url) => await fetch(url).then(data => data.json());
+      const registerEvents = (events, r) => ({
+        ...events.reduce((eventsMethods, event) => ({
+          ...eventsMethods, [event]() { this.$emit(event) }
+        }), {}),
+        ...r
+      });
       
       const STORAGE_KEY = 'adventure-main'
       const mainStorage = {
@@ -12,10 +17,14 @@
       }
 
       function Intro() {
-        return {$template: '#intro-template', start(){ this.$emit('start') }}
+        return registerEvents(['start'], {
+          $template: '#intro-template'
+        });
       };      
       function Day() {
-        return {$template: '#day-template', nextDay(){ this.$emit('nextDay') }})
+        return registerEvents(['nextDay'], {
+          $template: '#day-template'
+        });
       };
 
       createApp({
