@@ -11,6 +11,9 @@
         save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
       }
 
+      const Intro = () => ({$template: '#Intro'});      
+      const Day = () => ({$template: '#Day'});
+
       createApp({
         title: 'Aventure v0.1',
         onMount() {
@@ -32,10 +35,9 @@
         save() {
           mainStorage.save(this.data);
         },
+        Intro,
+        Day
       }).mount();
-
-      const Intro = () => ({$template: '#Intro'});      
-      const Day = () => ({$template: '#Day'});
     </script>
   </head>
   <body>
