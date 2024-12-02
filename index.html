@@ -10,22 +10,52 @@
         fetch: () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'),
         save: (data) => localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
       }
-          
+
       createApp({
         title: 'Aventure v0.1',
         onMount() {
-
+          // Prepare things on mount
         },
-        autoSavedData: [],
+        nextDay() {
+          this.data.story.push("test");
+        },
+        newAdventure() {
+          this.data.story === "";
+        },
+        get day() {
+          return this.data.story.length;
+        },
+        data: {
+          hero: {},
+          story: []
+        },
         save() {
-          mainStorage.save(this.autoSavedData);
+          mainStorage.save(this.data);
         },
       }).mount();
+
+      const Intro = () => ({$template: '#Intro'});      
+      const Day = () => ({$template: '#Day'});
     </script>
   </head>
   <body>
     <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
+      <button @click="newAdventure">Nouvelle aventure</button>
+      <template v-if="day === 0" v-scope="Intro()"/>
+      <template v-else v-scope="Day({day:day, data:data.story[day]})"/>
     </div>
+    
+    <template id="Intro">
+      <h2>Début de l'aventure</h2>
+      <p>L'aventure commence !</p>
+      <button @click="nextDay">Démarrer l'aventure !</button>
+    </template>
+    
+    <template id="Day">
+      <h2>Jour {{day}}</h2>
+      <h1>Data : {{data}}</h1>
+      <button @click="nextDay">Jour suivant</button>
+    </template>
   </body>
 </html>
