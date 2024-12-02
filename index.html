@@ -17,9 +17,18 @@
         return { $template: '#'+template+'-template' };
       };
 
+      const DEFAULT_HERO = {
+        strength: 1,
+        vitality: 1,
+      };
+
       createApp({
         title: 'Aventure v0.1',
-        onMount() {
+        async onMount() {
+          // Keep local save
+          this.data = await mainStorage.fetch();
+          if(!data) this.newAdventure();
+          
           // Prepare things on mount
         },
         nextDay() {
@@ -28,23 +37,21 @@
           this.dayStep = 0;
         },
         newAdventure() {
-          this.data.story === "";
+          this.data.story = [];
+          this.data.hero = structuredClone(DEFAULT_HERO);
         },
         addStrength(amount = 1) {
-          this.hero.strength++;
+          this.data.hero.strength++;
         },
         addVitality(amount = 1) {
-          this.hero.vitality++;
+          this.data.hero.vitality++;
         },
         get day() {
           return this.data.story.length;
         },
         dayStep: 0,
         data: {
-          hero: {
-            strength: 1,
-            vitality: 1,
-          },
+          hero: structuredClone(DEFAULT_HERO),
           story: []
         },
         save() {
