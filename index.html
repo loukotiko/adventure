@@ -3,12 +3,6 @@
   <head>
     <script type="module">
       import { createApp } from 'https://unpkg.com/petite-vue?module';
-      const registerEvents = (events, r) => ({
-        ...events.reduce((eventsMethods, event) => ({
-          ...eventsMethods, [event](...p) { this.$emit(event,...p) }
-        }), {}),
-        ...r
-      });
       
       const STORAGE_KEY = 'adventure-main'
       const mainStorage = {
@@ -17,14 +11,10 @@
       }
 
       function Intro() {
-        return registerEvents(['start'], {
-          $template: '#intro-template'
-        });
+        return { $template: '#intro-template' };
       };      
-      function Day({template}) {
-        return registerEvents(['nextDay'], {
-          $template: '#'+template+'-template'
-        });
+      function Day({ template }) {
+        return { $template: '#'+template+'-template' };
       };
 
       createApp({
@@ -39,6 +29,12 @@
         },
         newAdventure() {
           this.data.story === "";
+        },
+        addStrength(amount = 1) {
+          this.hero.strength++;
+        },
+        addVitality(amount = 1) {
+          this.hero.vitality++;
         },
         get day() {
           return this.data.story.length;
@@ -60,10 +56,10 @@
     </script>
   </head>
   <body>
-    <template id="intro">
+    <template id="intro-template">
       <h2>Début de l'aventure</h2>
       <p>L'aventure commence !</p>
-      <button @click="start()">Démarrer l'aventure !</button>
+      <button @click="nextDay()">Démarrer l'aventure !</button>
     </template>
     
     <template id="castle-template">
@@ -87,8 +83,8 @@
     <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
       <button @click="newAdventure()">Nouvelle aventure</button>
-      <div v-if="day === 0" v-scope="Intro()" @start="nextDay()"></div>
-      <div v-else v-scope="Day({template: day})" @nextDay="nextDay()"></div>
+      <div v-if="day === 0" v-scope="Intro()"></div>
+      <div v-else v-scope="Day({template: day})"></div>
     </div>
   </body>
 </html>
