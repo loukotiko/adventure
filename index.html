@@ -40,7 +40,7 @@
           this.data = await mainStorage.fetch();
           if(!this.data) this.newAdventure();
           
-          this.dayComponent = this.updateComponent();
+          this.updateComponent();
           
           // Prepare things on mount
         },
@@ -48,6 +48,7 @@
         updateComponent() {
           this.dayComponent?.unmount();
           const wrapper = this.$refs.dayWrapper;
+          if(!wrapper) return;
           wrapper.setAttribute("v-scope", "DynamicDay()");
           wrapper.innerHTML = "";
           const template = this.data.story[this.day - 1];
@@ -80,7 +81,7 @@
           mainStorage.save(this.data);
         },
         Intro
-      }).mount();
+      }).mount("#game");
     </script>
   </head>
   <body>
@@ -108,12 +109,11 @@
       </div>
     </template>
     
-    <div v-scope @vue:mounted="onMount" v-effect="save()" v-cloak>
+    <div id="game" @vue:mounted="onMount" v-effect="save()" v-cloak>
       <h1>{{title}}</h1>
       <button @click="newAdventure()">Nouvelle aventure</button>
-      <div ref="dayWrapper"></div>
-<!--      <div v-if="day === 0" v-scope="Intro()"></div>
-      <div v-else v-scope="Day({template: data.story[day-1]})"></div>  -->
+      <div v-if="day === 0" v-scope="Intro()"></div>
+      <div v-else ref="dayWrapper"></div>
     </div>
   </body>
 </html>
