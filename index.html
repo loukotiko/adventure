@@ -33,9 +33,9 @@
 
       createApp({
         title: "Aventure v0.1",
-        async onMount() {
+        onMount() {
           // Keep local save
-          this.data = await mainStorage.fetch();
+          this.data = mainStorage.fetch();
           if (!this.data) this.newAdventure();
 
           this.updateComponent();
