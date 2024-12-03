@@ -3,6 +3,8 @@
   <head>
     <script type="module">
       import { createApp } from "https://unpkg.com/petite-vue?module";
+      import Castle from "./days/castle.mjs";
+      import River from "./days/river.mjs";
 
       const STORAGE_KEY = "adventure-main";
       const mainStorage = {
@@ -14,22 +16,23 @@
         return { ...props, $template: `#${template || "intro"}-template` };
       }
 
-      function StepDay(props) {
-        return {
-          ...Day(props),
-          dayStep: 0,
-        };
-      }
+      // FightDay => methods to fight and use hero abilities
 
       const DEFAULT_HERO = {
         strength: 1,
+        agility: 1,
+        wisdom: 1,
+        charisma: 1,
         vitality: 1,
+        abilities: [],
+        relations: [],
       };
 
-      const ROUTES = ["castle", "river"];
       const ROUTES_COMPONENTS = {
-        river: StepDay,
+        Castle,
+        River,
       };
+      const ROUTES = Object.keys(ROUTES_COMPONENTS);
 
       createApp({
         title: "Aventure v0.1",
@@ -67,6 +70,7 @@
         newAdventure() {
           this.data.story = [];
           this.data.hero = structuredClone(DEFAULT_HERO);
+          this.updateComponent();
         },
         addStrength(amount = 1) {
           this.data.hero.strength++;
@@ -92,24 +96,6 @@
       <h2>Début de l'aventure</h2>
       <p>L'aventure commence !</p>
       <button @click="nextDay()">Démarrer l'aventure !</button>
-    </template>
-
-    <template id="castle-template">
-      <h2>Jour {{day}}</h2>
-      <h1>Chateau ! {{data}}</h1>
-      <button @click="nextDay()">Jour suivant</button>
-    </template>
-
-    <template id="river-template">
-      <h2>Jour {{day}}</h2>
-      <h1>Rivière ! {{data}}</h1>
-      <div v-if="dayStep === 0">
-        <button @click="addVitality(1) + dayStep++">Se reposer</button>
-        <button @click="addStrength(1) + dayStep++">Pêcher du poisson</button>
-      </div>
-      <div v-if="dayStep === 1">
-        <button @click="nextDay()">Jour suivant</button>
-      </div>
     </template>
 
     <div id="game" @vue:mounted="onMount" v-effect="save()" v-cloak>
