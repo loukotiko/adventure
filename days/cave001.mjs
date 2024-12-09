@@ -1,6 +1,38 @@
+const fight = {
+  fightStep: 0,
+  attack() {
+    // Faire des attaques physiques
+    // Ajouter le résultat
+    // Display le résultat et passer à une nouvelle attaque...
+    this.fightStep++;
+  },
+  talk() {
+    // Faire des attaques sociales
+    // Ajouter le résultat
+    // Display le résultat et passer à une nouvelle attaque...
+    this.fightStep++;
+  },
+  checkWin() {
+    // if()... this.effectOnWin();
+  },
+  checkLose() {
+    // if()... this.effectOnLose();
+  },
+  fight() {
+    return {
+      description: "Bimbamboum",
+      actions: [
+        { label: "Attaquer", effect: () => this.attack(); },
+        { label: "Parlementer", effect: () => this.talk(); },
+      ]
+    }
+  }
+}
+
 export default function (props) {
   return {
     ...props,
+    ...fight,
     step: 0,
     get currentStep() {
       switch(this.step) {
@@ -27,6 +59,27 @@ export default function (props) {
             actions: [
               { label: "S'enfuir", effect: () => this.nextDay() },
               { label: "Engager le combat", effect: () => this.step = 3 },
+            ]
+          }
+        case 3:
+          return this.fight({
+            numberOfOpponents: 1,
+            effectOnWin: () => this.step = 4,
+            effectOnLose: () => this.step = 5
+          });
+        case 4:
+          return {
+            description: "Le combat se passe mal, vous vous enfuyez.",
+            actions: [
+              { label: "S'enfuir", effect: () => this.nextDay() },
+            ]
+          }
+        case 4:
+          return {
+            description: "Après un combat acharné, vos adversaires ont pris la fuite. Vous êtes devant leur trésor.",
+            actions: [
+              { label: "Prendre le butin", effect: () => this.nextDay() },
+              { label: "Laisser le butin", effect: () => this.nextDay() },
             ]
           }
       }
