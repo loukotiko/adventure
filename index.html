@@ -5,6 +5,7 @@
       import { createApp } from "https://unpkg.com/petite-vue?module";
       import Castle from "./days/castle.mjs";
       import River from "./days/river.mjs";
+      import Cave001 from "./days/cave001.mjs";
 
       const STORAGE_KEY = "adventure-main";
       const mainStorage = {
@@ -29,8 +30,7 @@
       };
 
       const ROUTES_COMPONENTS = {
-        Castle,
-        River,
+        Cave001
       };
       const ROUTES = Object.keys(ROUTES_COMPONENTS);
 
@@ -63,7 +63,8 @@
         },
         nextDay() {
           this.data.story.push(
-            ROUTES[Math.round(Math.random() * (ROUTES.length - 1))]
+            // RANDOM : ROUTES[Math.round(Math.random() * (ROUTES.length - 1))]
+            ROUTES[this.data.story.length]
           );
           this.updateComponent();
         },
