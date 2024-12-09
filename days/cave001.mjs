@@ -34,10 +34,10 @@ export default function (props) {
     $template: `
         <description>
         <div class="description">
-          <p>{currentStep.description}</p>
+          <p>{{currentStep.description}}</p>
         </div>
         <div class="actions" v-for="action in currentStep.actions">
-          <button @click="action.effect">{action.label}</button>
+          <button @click="action.effect">{{action.label}}</button>
         </div>
     `,
   };
